@@ -1,5 +1,5 @@
 import {INIT, LOADING, DETAIL} from '../constants';
-import $ from 'jquery';
+import axios from '../axios.jsx';
 
 export function init() {
     return function(dispatch){
@@ -7,7 +7,9 @@ export function init() {
             type: LOADING,
             payload: true
         });
-        $.get('https://api.github.com/repositories').then(function(data){
+
+        axios.get('repositories')
+          .then(function (response) {
             dispatch({
                 type: INIT,
                 payload:{
@@ -18,22 +20,26 @@ export function init() {
                 type: LOADING,
                 payload: false
             });
-        });
-    }
+            console.log(response);
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
+    };
 
-};
+}
 
 export function getDetail(id) {
     return function(dispatch) {
         dispatch({type: LOADING, payload: true});
-        $.get('https://api.github.com/repositories/' + id).then(function(data) {
-            dispatch({
-                type: DETAIL,
-                payload: {
-                    detail: data
-                }
-            });
-            dispatch({type: LOADING, payload: false});
-        });
+        // $.get('https://api.github.com/repositories/' + id).then(function(data) {
+        //     dispatch({
+        //         type: DETAIL,
+        //         payload: {
+        //             detail: data
+        //         }
+        //     });
+        //     dispatch({type: LOADING, payload: false});
+        // });
     }
 };
